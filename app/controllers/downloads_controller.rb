@@ -13,12 +13,24 @@ class DownloadsController < ApplicationController
       #   file_name = params[:id]
       # end
       track_download = TrackDownload.new
-      track_download.remote_ip = request.remote_ip
       track_download.document_name = params[:id]
+      track_download.remote_ip = request.remote_ip + " / #{request.env["HTTP_X_FORWARDED_FOR"]} / #{request.env["X-Real-IP"]} / #{request.env["HTTP_X_REAL_IP"]}"
       track_download.save
     end
 
-    send_file RAILS_ROOT + "/vendor/extensions/send_file/db/documents/" + filename + ".pdf", :type => 'application/pdf'
+    begin
+      send_file RAILS_ROOT + "/vendor/extensions/send_file/db/documents/" + filename + ".pdf", :type => 'application/pdf'
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
+
+      redirect_to "/"
+    else
+      # other exception
+    ensure
+      # always executed
+    end
+    
   end
 end
 
