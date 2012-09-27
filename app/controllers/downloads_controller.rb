@@ -19,7 +19,11 @@ class DownloadsController < ApplicationController
     end
 
     begin
-      send_file RAILS_ROOT + "/vendor/extensions/send_file/db/documents/" + filename + ".pdf", :type => 'application/pdf'
+      if params[:id] != "Siimbyant-Vorstellung-Umweltcockpit"
+        send_file RAILS_ROOT + "/vendor/extensions/send_file/db/documents/Umweltcockpit-Modulübersicht.pdf", :type => 'application/pdf'
+      else
+        send_file RAILS_ROOT + "/vendor/extensions/send_file/db/documents/" + filename + ".pdf", :type => 'application/pdf'
+      end
     rescue Exception => e
       puts e.message
       puts e.backtrace.inspect
